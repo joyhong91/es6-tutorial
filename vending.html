@@ -9,8 +9,70 @@
 <header>
   <h1>조이 자판기</h1>
 </header>
-<div class="content">
-  <div id="test"></div>
+<div class="content" id="jappangi">
+    <div class="wrap_product">
+    <h2 class="tit_cont">상품진열대</h2>
+    <ul class="list_product">
+      <li>
+        <a class="link_product">
+        <span class="wrap_thumb">
+          <img src="./img/orange.jpg" alt="오렌지주스">
+        </span>
+          <span class="tit_product">오렌지주스</span>
+          <span class="label_price">750</span>
+    
+          <button class="btn_purchase">구매</button>
+        </a>
+      </li>
+      <li>
+        <a class="link_product">
+        <span class="wrap_thumb">
+          <img src="./img/coffee.jpg" alt="커피">
+        </span>
+          <span class="tit_product">커피</span>
+          <span class="label_price">500</span>
+      
+          <button class="btn_purchase">구매</button>
+        </a>
+      </li>
+      <li>
+        <a class="link_product">
+        <span class="wrap_thumb">
+          <img src="./img/choco.jpg" alt="초콜릿">
+        </span>
+          <span class="tit_product">초콜릿</span>
+          <span class="label_price">2000</span>
+      
+          <button class="btn_purchase">구매</button>
+        </a>
+      </li>
+      <li>
+        <a class="link_product">
+        <span class="wrap_thumb">
+          <img src="" alt="none">
+        </span>
+          <span class="tit_product">SOLD OUT</span>
+          <span class="label_price">0</span>
+      
+          <button class="btn_purchase">구매</button>
+        </a>
+      </li>
+    </ul>
+  </div>
+  
+  <div class="wrap_basket">
+    <h2 class="tit_cont">장바구니</h2>
+    <ul class="list_basket"></ul>
+    <div class="wrap_price">
+      <span class="total_price">0</span>
+    </div>
+  </div>
+  <div class="wrap_result">
+    <span class="txt_alert"></span>
+  </div>
+  <div class="wrap_counter">
+    <h2 class="tit_cont">계산대</h2>
+  </div>
 </div>
 <script src="build/vending.bundle.js"></script>
 </body>

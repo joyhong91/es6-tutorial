@@ -98,7 +98,111 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
 
-jquery__WEBPACK_IMPORTED_MODULE_0___default()('#test').text('test');
+let totalPrice = 0;
+
+class VendingMachine {
+  constructor(name, price) {
+    this.name = name;
+    this.price = parseInt(price);
+  }
+
+  addBasket() {
+    this.addPrice();
+    return this._addBasketTmpl(this.name, this.price);
+  }
+
+  addPrice() {
+    totalPrice = totalPrice + this.price;
+  } // get monthlyPayment() {
+  //   let monthlyRate = this.rate / 100 / 12;
+  //   return this.principal * monthlyRate / (1 - (Math.pow(1/(1 + monthlyRate),
+  //       this.years * 12)));
+  // }
+  // get amortization() {
+  //   let monthlyPayment = this.monthlyPayment;
+  //   let monthlyRate = this.rate / 100 / 12;
+  //   let balance = this.principal;
+  //   let amortization = [];
+  //   for (let y=0; y<this.years; y++) {
+  //     let interestY = 0;
+  //     let principalY = 0;
+  //     for (let m=0; m<12; m++) {
+  //       let interestM = balance * monthlyRate;
+  //       let principalM = monthlyPayment - interestM;
+  //       interestY = interestY + interestM;
+  //       principalY = principalY + principalM;
+  //       balance = balance - principalM;
+  //     }
+  //     amortization.push({principalY, interestY, balance});
+  //   }
+  //   return amortization;
+  // }
+
+
+  _addBasketTmpl(name, price) {
+    let template = `<li>
+                    <span class="inner">
+                     ${name} | ${price}
+                    </span>
+                    <button class="btn_cancel">-</button>
+                   </li>`;
+    return template;
+  }
+
+}
+
+class Calc {
+  constructor(a, b) {
+    this.a = a;
+    this.b = b;
+  }
+
+  add() {
+    return this.a + this.b;
+  }
+
+  subtract() {
+    return this.a - this.b;
+  }
+
+  multiply() {
+    return this.a * this.b;
+  }
+
+  divide() {
+    return this.a / this.b;
+  }
+
+}
+
+const $MACHINE = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#jappangi');
+const $purchaseBtn = $MACHINE.find('.btn_purchase');
+const $wrapBasket = $MACHINE.find('.wrap_basket');
+const $wrapPrice = $MACHINE.find('.wrap_price');
+const $wrapResult = $MACHINE.find('.wrap_result');
+const MESSAGES = {
+  SOLDOUT: '재고가 없습니다.',
+  LACK: '잔돈이 부족합니다.',
+  SUCCESS: '구매가 정상적을 처리되었습니다.'
+}; //구매
+
+$purchaseBtn.on('click', e => {
+  e.preventDefault();
+  let $target = jquery__WEBPACK_IMPORTED_MODULE_0___default()(e.target),
+      $parentTarget = $target.parent('.link_product'),
+      name = $parentTarget.find('.tit_product').text(),
+      price = parseInt($parentTarget.find('.label_price').text());
+
+  if (price === 0) {
+    $wrapResult.find('.txt_alert').text(MESSAGES.SOLDOUT);
+    return false;
+  }
+
+  let machine = new VendingMachine(name, price);
+  $wrapBasket.find('.list_basket').append(machine.addBasket());
+  $wrapPrice.find('.total_price').text(totalPrice);
+  $wrapResult.find('.txt_alert').text('');
+});
 
 /***/ }),
 
