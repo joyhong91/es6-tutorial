@@ -14,29 +14,17 @@ export class VendingMachine {
     this.charge = parseInt(charge);
   }
 
-  addBasket() {
-    this.addPrice();
-    return this._addBasketTmpl(this.name, this.price);
-  }
-
-  removeBasket(){
-    this.distractPrice();
-  }
-
-  resetTotalPrice(){
-    totalPrice = 0;
-  }
-
   getTotalPrice(){
     return totalPrice;
   }
 
-  addPrice(){
-    totalPrice = totalPrice + this.price;
+  addBasket() {
+    this._addPrice();
+    return this._addBasketTmpl(this.name, this.price);
   }
 
-  distractPrice(){
-    totalPrice = totalPrice - this.price;
+  removeBasket(){
+    this._distractPrice();
   }
 
   payCharge(){
@@ -50,10 +38,22 @@ export class VendingMachine {
       let change = this.charge - totalPrice;
       let changeArr = this._calChange(change);
       resultMsg = `${MESSAGES.SUCCESS} 거스름돈은 ${change} 으로 500원 ${changeArr[0]}개, 100원 ${changeArr[1]}개, 50원 ${changeArr[2]}개, 10원 ${changeArr[3]}개 입니다.`;
-      this.resetTotalPrice();
+      this._resetTotalPrice();
     }
 
     return resultMsg;
+  }
+
+  _resetTotalPrice(){
+    totalPrice = 0;
+  }
+
+  _addPrice(){
+    totalPrice = totalPrice + this.price;
+  }
+
+  _distractPrice(){
+    totalPrice = totalPrice - this.price;
   }
 
   _calChange(changeParam) {
