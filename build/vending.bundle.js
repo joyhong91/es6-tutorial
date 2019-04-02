@@ -158,11 +158,13 @@ class VendingMachine {
     let change = changeParam;
     let changeArr = [500, 100, 50, 10];
     let result = [];
-
-    for (var i = 0; i < changeArr.length; i++) {
-      result.push(Math.floor(change / changeArr[i]));
-      change = change % changeArr[i];
-    }
+    changeArr.forEach(function (coin, index) {
+      result.push(Math.floor(change / coin));
+      change = change % coin;
+    }); // for(var i = 0; i< changeArr.length; i++){
+    //   result.push(Math.floor(change / changeArr[i]));
+    //   change = change % changeArr[i];
+    // }
 
     return result;
   }
