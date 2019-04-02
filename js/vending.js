@@ -1,5 +1,5 @@
 import $ from 'jquery';
-import {MESSAGES, VendingMachine} from './vending-class'
+import {totalPrice, MESSAGES, VendingMachine} from './vending-class'
 
 const $MACHINE = $('#jappangi');
 const $purchaseBtn = $MACHINE.find('.btn_purchase');
@@ -24,7 +24,7 @@ $purchaseBtn.on('click', (e) => {
   let machine = new VendingMachine(name, price);
   $listBasket.append(machine.addBasket());
   $alertElem.text('');
-  $totalPriceElem.text(machine.getTotalPrice());
+  $totalPriceElem.text(totalPrice);
 });
 
 //cancel
@@ -36,7 +36,7 @@ $listBasket.on('click', '.btn_cancel', (e) => {
 
   $parentItem.remove();
   machine.removeBasket();
-  $totalPriceElem.text(machine.getTotalPrice());
+  $totalPriceElem.text(totalPrice);
 });
 
 //payment
@@ -48,7 +48,7 @@ $chargeForm.keypress(e =>{
     let result = machine.payCharge();
 
     $alertElem.text(result);
-    $totalPriceElem.text(machine.getTotalPrice());
+    $totalPriceElem.text(totalPrice);
     $chargeForm.val('');
     $listBasket.find('li').remove();
   }

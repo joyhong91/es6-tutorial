@@ -90,12 +90,13 @@
 /*!*****************************!*\
   !*** ./js/vending-class.js ***!
   \*****************************/
-/*! exports provided: MESSAGES, VendingMachine */
+/*! exports provided: MESSAGES, totalPrice, VendingMachine */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MESSAGES", function() { return MESSAGES; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "totalPrice", function() { return totalPrice; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VendingMachine", function() { return VendingMachine; });
 const MESSAGES = {
   EMPTY: '구매할 물품이 없습니다.',
@@ -112,28 +113,13 @@ class VendingMachine {
   }
 
   addBasket() {
-    this.addPrice();
+    this._addPrice();
+
     return this._addBasketTmpl(this.name, this.price);
   }
 
   removeBasket() {
-    this.distractPrice();
-  }
-
-  resetTotalPrice() {
-    totalPrice = 0;
-  }
-
-  getTotalPrice() {
-    return totalPrice;
-  }
-
-  addPrice() {
-    totalPrice = totalPrice + this.price;
-  }
-
-  distractPrice() {
-    totalPrice = totalPrice - this.price;
+    this._distractPrice();
   }
 
   payCharge() {
@@ -149,10 +135,23 @@ class VendingMachine {
       let changeArr = this._calChange(change);
 
       resultMsg = `${MESSAGES.SUCCESS} 거스름돈은 ${change} 으로 500원 ${changeArr[0]}개, 100원 ${changeArr[1]}개, 50원 ${changeArr[2]}개, 10원 ${changeArr[3]}개 입니다.`;
-      this.resetTotalPrice();
+
+      this._resetTotalPrice();
     }
 
     return resultMsg;
+  }
+
+  _resetTotalPrice() {
+    totalPrice = 0;
+  }
+
+  _addPrice() {
+    totalPrice = totalPrice + this.price;
+  }
+
+  _distractPrice() {
+    totalPrice = totalPrice - this.price;
   }
 
   _calChange(changeParam) {
@@ -217,7 +216,7 @@ $purchaseBtn.on('click', e => {
   let machine = new _vending_class__WEBPACK_IMPORTED_MODULE_1__["VendingMachine"](name, price);
   $listBasket.append(machine.addBasket());
   $alertElem.text('');
-  $totalPriceElem.text(machine.getTotalPrice());
+  $totalPriceElem.text(_vending_class__WEBPACK_IMPORTED_MODULE_1__["totalPrice"]);
 }); //cancel
 
 $listBasket.on('click', '.btn_cancel', e => {
@@ -227,7 +226,7 @@ $listBasket.on('click', '.btn_cancel', e => {
   let $parentItem = $target.parent('li');
   $parentItem.remove();
   machine.removeBasket();
-  $totalPriceElem.text(machine.getTotalPrice());
+  $totalPriceElem.text(_vending_class__WEBPACK_IMPORTED_MODULE_1__["totalPrice"]);
 }); //payment
 
 $chargeForm.keypress(e => {
@@ -238,7 +237,7 @@ $chargeForm.keypress(e => {
     let machine = new _vending_class__WEBPACK_IMPORTED_MODULE_1__["VendingMachine"]('', 0, charge);
     let result = machine.payCharge();
     $alertElem.text(result);
-    $totalPriceElem.text(machine.getTotalPrice());
+    $totalPriceElem.text(_vending_class__WEBPACK_IMPORTED_MODULE_1__["totalPrice"]);
     $chargeForm.val('');
     $listBasket.find('li').remove();
   }

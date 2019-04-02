@@ -5,17 +5,13 @@ export const MESSAGES = {
   SUCCESS: '구매가 정상적을 처리되었습니다.'
 };
 
-let totalPrice = 0;
+export let totalPrice = 0;
 
 export class VendingMachine {
   constructor(name='', price=0, charge=0) {
     this.name = name;
     this.price = parseInt(price);
     this.charge = parseInt(charge);
-  }
-
-  getTotalPrice(){
-    return totalPrice;
   }
 
   addBasket() {
