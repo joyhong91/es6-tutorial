@@ -86,6 +86,102 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./js/vending-class.js":
+/*!*****************************!*\
+  !*** ./js/vending-class.js ***!
+  \*****************************/
+/*! exports provided: MESSAGES, VendingMachine */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MESSAGES", function() { return MESSAGES; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VendingMachine", function() { return VendingMachine; });
+const MESSAGES = {
+  EMPTY: '구매할 물품이 없습니다.',
+  SOLDOUT: '재고가 없습니다.',
+  LACK: '돈이 부족합니다.',
+  SUCCESS: '구매가 정상적을 처리되었습니다.'
+};
+let totalPrice = 0;
+class VendingMachine {
+  constructor(name = '', price = 0, charge = 0) {
+    this.name = name;
+    this.price = parseInt(price);
+    this.charge = parseInt(charge);
+  }
+
+  addBasket() {
+    this.addPrice();
+    return this._addBasketTmpl(this.name, this.price);
+  }
+
+  removeBasket() {
+    this.distractPrice();
+  }
+
+  resetTotalPrice() {
+    totalPrice = 0;
+  }
+
+  getTotalPrice() {
+    return totalPrice;
+  }
+
+  addPrice() {
+    totalPrice = totalPrice + this.price;
+  }
+
+  distractPrice() {
+    totalPrice = totalPrice - this.price;
+  }
+
+  payCharge() {
+    let resultMsg = '';
+
+    if (totalPrice == 0) {
+      resultMsg = MESSAGES.EMPTY;
+    } else if (totalPrice > this.charge) {
+      resultMsg = `${MESSAGES.LACK}  부족한 금액: ${totalPrice - this.charge}`;
+    } else {
+      let change = this.charge - totalPrice;
+
+      let changeArr = this._calChange(change);
+
+      resultMsg = `${MESSAGES.SUCCESS} 거스름돈은 ${change} 으로 500원 ${changeArr[0]}개, 100원 ${changeArr[1]}개, 50원 ${changeArr[2]}개, 10원 ${changeArr[3]}개 입니다.`;
+      this.resetTotalPrice();
+    }
+
+    return resultMsg;
+  }
+
+  _calChange(changeParam) {
+    let change = changeParam;
+    let changeArr = [500, 100, 50, 10];
+    let result = [];
+
+    for (var i = 0; i < changeArr.length; i++) {
+      result.push(Math.floor(change / changeArr[i]));
+      change = change % changeArr[i];
+    }
+
+    return result;
+  }
+
+  _addBasketTmpl(name, price) {
+    let template = `<li>
+                    <span class="inner">
+                     ${name} | ${price}
+                    </span>
+                    <button class="btn_cancel" data-price="${price}">-</button>
+                   </li>`;
+    return template;
+  }
+
+}
+
+/***/ }),
+
 /***/ "./js/vending.js":
 /*!***********************!*\
   !*** ./js/vending.js ***!
@@ -97,111 +193,55 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _vending_class__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./vending-class */ "./js/vending-class.js");
 
-let totalPrice = 0;
-
-class VendingMachine {
-  constructor(name, price) {
-    this.name = name;
-    this.price = parseInt(price);
-  }
-
-  addBasket() {
-    this.addPrice();
-    return this._addBasketTmpl(this.name, this.price);
-  }
-
-  addPrice() {
-    totalPrice = totalPrice + this.price;
-  } // get monthlyPayment() {
-  //   let monthlyRate = this.rate / 100 / 12;
-  //   return this.principal * monthlyRate / (1 - (Math.pow(1/(1 + monthlyRate),
-  //       this.years * 12)));
-  // }
-  // get amortization() {
-  //   let monthlyPayment = this.monthlyPayment;
-  //   let monthlyRate = this.rate / 100 / 12;
-  //   let balance = this.principal;
-  //   let amortization = [];
-  //   for (let y=0; y<this.years; y++) {
-  //     let interestY = 0;
-  //     let principalY = 0;
-  //     for (let m=0; m<12; m++) {
-  //       let interestM = balance * monthlyRate;
-  //       let principalM = monthlyPayment - interestM;
-  //       interestY = interestY + interestM;
-  //       principalY = principalY + principalM;
-  //       balance = balance - principalM;
-  //     }
-  //     amortization.push({principalY, interestY, balance});
-  //   }
-  //   return amortization;
-  // }
-
-
-  _addBasketTmpl(name, price) {
-    let template = `<li>
-                    <span class="inner">
-                     ${name} | ${price}
-                    </span>
-                    <button class="btn_cancel">-</button>
-                   </li>`;
-    return template;
-  }
-
-}
-
-class Calc {
-  constructor(a, b) {
-    this.a = a;
-    this.b = b;
-  }
-
-  add() {
-    return this.a + this.b;
-  }
-
-  subtract() {
-    return this.a - this.b;
-  }
-
-  multiply() {
-    return this.a * this.b;
-  }
-
-  divide() {
-    return this.a / this.b;
-  }
-
-}
 
 const $MACHINE = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#jappangi');
 const $purchaseBtn = $MACHINE.find('.btn_purchase');
-const $wrapBasket = $MACHINE.find('.wrap_basket');
-const $wrapPrice = $MACHINE.find('.wrap_price');
-const $wrapResult = $MACHINE.find('.wrap_result');
-const MESSAGES = {
-  SOLDOUT: '재고가 없습니다.',
-  LACK: '잔돈이 부족합니다.',
-  SUCCESS: '구매가 정상적을 처리되었습니다.'
-}; //구매
+const $listBasket = $MACHINE.find('.wrap_basket .list_basket');
+const $totalPriceElem = $MACHINE.find('.wrap_price .total_price');
+const $alertElem = $MACHINE.find('.wrap_result .txt_alert');
+const $chargeForm = $MACHINE.find('.form_charge'); //purchase
 
 $purchaseBtn.on('click', e => {
-  e.preventDefault();
   let $target = jquery__WEBPACK_IMPORTED_MODULE_0___default()(e.target),
       $parentTarget = $target.parent('.link_product'),
       name = $parentTarget.find('.tit_product').text(),
       price = parseInt($parentTarget.find('.label_price').text());
 
   if (price === 0) {
-    $wrapResult.find('.txt_alert').text(MESSAGES.SOLDOUT);
+    $alertElem.text(_vending_class__WEBPACK_IMPORTED_MODULE_1__["MESSAGES"].SOLDOUT);
     return false;
   }
 
-  let machine = new VendingMachine(name, price);
-  $wrapBasket.find('.list_basket').append(machine.addBasket());
-  $wrapPrice.find('.total_price').text(totalPrice);
-  $wrapResult.find('.txt_alert').text('');
+  let machine = new _vending_class__WEBPACK_IMPORTED_MODULE_1__["VendingMachine"](name, price);
+  $listBasket.append(machine.addBasket());
+  $alertElem.text('');
+  $totalPriceElem.text(machine.getTotalPrice());
+}); //cancel
+
+$listBasket.on('click', '.btn_cancel', e => {
+  let $target = jquery__WEBPACK_IMPORTED_MODULE_0___default()(e.target);
+  let price = jquery__WEBPACK_IMPORTED_MODULE_0___default()(e.target).data('price');
+  let machine = new _vending_class__WEBPACK_IMPORTED_MODULE_1__["VendingMachine"]('', price, 0);
+  let $parentItem = $target.parent('li');
+  $parentItem.remove();
+  machine.removeBasket();
+  $totalPriceElem.text(machine.getTotalPrice());
+}); //payment
+
+$chargeForm.keypress(e => {
+  let key = e.which;
+
+  if (key == 13) {
+    let charge = jquery__WEBPACK_IMPORTED_MODULE_0___default()(e.target).val();
+    let machine = new _vending_class__WEBPACK_IMPORTED_MODULE_1__["VendingMachine"]('', 0, charge);
+    let result = machine.payCharge();
+    $alertElem.text(result);
+    $totalPriceElem.text(machine.getTotalPrice());
+    $chargeForm.val('');
+    $listBasket.find('li').remove();
+  }
 });
 
 /***/ }),

@@ -1,64 +1,55 @@
 import $ from 'jquery';
-
-let totalPrice = 0;
-
-class VendingMachine {
-
-  constructor(name, price) {
-    this.name = name;
-    this.price = parseInt(price);
-  }
-
-  addBasket() {
-    this.addPrice();
-    return this._addBasketTmpl(this.name, this.price);
-  }
-
-  addPrice(){
-    totalPrice = totalPrice + this.price;
-  }
-
-  _addBasketTmpl(name, price){
-    let template = `<li>
-                    <span class="inner">
-                     ${name} | ${price}
-                    </span>
-                    <button class="btn_cancel">-</button>
-                   </li>`;
-    return template;
-  }
-
-}
+import {MESSAGES, VendingMachine} from './vending-class'
 
 const $MACHINE = $('#jappangi');
 const $purchaseBtn = $MACHINE.find('.btn_purchase');
-const $wrapBasket = $MACHINE.find('.wrap_basket');
-const $wrapPrice = $MACHINE.find('.wrap_price');
-const $wrapResult = $MACHINE.find('.wrap_result');
-const MESSAGES = {
-  SOLDOUT: '재고가 없습니다.',
-  LACK: '잔돈이 부족합니다.',
-  SUCCESS: '구매가 정상적을 처리되었습니다.'
-};
+const $listBasket = $MACHINE.find('.wrap_basket .list_basket');
+const $totalPriceElem = $MACHINE.find('.wrap_price .total_price');
+const $alertElem = $MACHINE.find('.wrap_result .txt_alert');
+const $chargeForm = $MACHINE.find('.form_charge');
 
-//구매
+
+//purchase
 $purchaseBtn.on('click', (e) => {
-  e.preventDefault();
-
   let $target = $(e.target),
       $parentTarget = $target.parent('.link_product'),
       name = $parentTarget.find('.tit_product').text(),
       price = parseInt($parentTarget.find('.label_price').text());
 
   if(price === 0){
-    $wrapResult.find('.txt_alert').text(MESSAGES.SOLDOUT);
+    $alertElem.text(MESSAGES.SOLDOUT);
     return false;
   }
 
   let machine = new VendingMachine(name, price);
-  $wrapBasket.find('.list_basket').append(machine.addBasket());
-  $wrapPrice.find('.total_price').text(totalPrice);
-  $wrapResult.find('.txt_alert').text('');
+  $listBasket.append(machine.addBasket());
+  $alertElem.text('');
+  $totalPriceElem.text(machine.getTotalPrice());
 });
 
-//장바구니 취소
+//cancel
+$listBasket.on('click', '.btn_cancel', (e) => {
+  let $target = $(e.target);
+  let price = $(e.target).data('price');
+  let machine = new VendingMachine('',price ,0);
+  let $parentItem = $target.parent('li');
+
+  $parentItem.remove();
+  machine.removeBasket();
+  $totalPriceElem.text(machine.getTotalPrice());
+});
+
+//payment
+$chargeForm.keypress(e =>{
+  let key = e.which;
+  if(key == 13){
+    let charge = $(e.target).val();
+    let machine = new VendingMachine('',0,charge);
+    let result = machine.payCharge();
+
+    $alertElem.text(result);
+    $totalPriceElem.text(machine.getTotalPrice());
+    $chargeForm.val('');
+    $listBasket.find('li').remove();
+  }
+});
