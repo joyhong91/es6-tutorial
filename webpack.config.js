@@ -3,7 +3,7 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: {
-    vending: './js/vending.js'
+    game: './practice/game/assets/js/app.js'
   },
   mode: 'development',
   output: {
@@ -20,6 +20,13 @@ module.exports = {
         }
       }
     ]
+  },
+  devServer:{
+    port: '8080',
+    contentBase: path.resolve(__dirname, 'practice/game'),
+    watchContentBase: true,
+    compress:true,
+    port: 8080
   },
   stats: {
     colors: true

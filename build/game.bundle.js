@@ -81,15 +81,15 @@
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./practice/01/assets/js/app.js");
+/******/ 	return __webpack_require__(__webpack_require__.s = "./practice/game/assets/js/app.js");
 /******/ })
 /************************************************************************/
 /******/ ({
 
-/***/ "./practice/01/assets/js/app.js":
-/*!**************************************!*\
-  !*** ./practice/01/assets/js/app.js ***!
-  \**************************************/
+/***/ "./practice/game/assets/js/app.js":
+/*!****************************************!*\
+  !*** ./practice/game/assets/js/app.js ***!
+  \****************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -150,7 +150,7 @@
 
     function rouletteItems(result) {
       var currentItem = result !== undefined ? result : itemCounter % 3;
-      var itemImage = './resources/images/' + itemData[currentItem] + '.png';
+      var itemImage = './assets/images/' + itemData[currentItem] + '.png';
       $('.item_computer').attr('src', itemImage);
       itemCounter++;
     }
@@ -192,4 +192,4 @@
 /***/ })
 
 /******/ });
-//# sourceMappingURL=vending.bundle.js.map
+//# sourceMappingURL=game.bundle.js.map

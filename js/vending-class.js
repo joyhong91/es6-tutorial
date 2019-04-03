@@ -5,17 +5,20 @@ export const MESSAGES = {
   SUCCESS: '구매가 정상적을 처리되었습니다.'
 };
 
-export let totalPrice = 0;
+// export let totalPrice = 0;
 
 export class VendingMachine {
-  constructor(name='', price=0, charge=0) {
-    this.name = name;
-    this.price = parseInt(price);
-    this.charge = parseInt(charge);
+
+  constructor() {
+    this.name = '';
+    this.price = 0;
+    this.charge = 0;
+    this.totalPrice = 0;
   }
 
   addBasket() {
     this._addPrice();
+    console.log(this.totalPrice);
     return this._addBasketTmpl(this.name, this.price);
   }
 
@@ -26,12 +29,12 @@ export class VendingMachine {
   payCharge(){
     let resultMsg = '';
 
-    if(totalPrice == 0){
+    if(this.totalPrice == 0){
       resultMsg = MESSAGES.EMPTY;
-    } else if(totalPrice > this.charge){
-      resultMsg = `${MESSAGES.LACK}  부족한 금액: ${totalPrice - this.charge}`;
+    } else if(this.totalPrice > this.charge){
+      resultMsg = `${MESSAGES.LACK}  부족한 금액: ${this.totalPrice - this.charge}`;
     }else{
-      let change = this.charge - totalPrice;
+      let change = this.charge - this.totalPrice;
       let changeArr = this._calChange(change);
       resultMsg = `${MESSAGES.SUCCESS} 거스름돈은 ${change} 으로 500원 ${changeArr[0]}개, 100원 ${changeArr[1]}개, 50원 ${changeArr[2]}개, 10원 ${changeArr[3]}개 입니다.`;
       this._resetTotalPrice();
@@ -40,16 +43,21 @@ export class VendingMachine {
     return resultMsg;
   }
 
+  purchage(name, price){
+      this.name = name;
+      this.price = price;
+  }
+
   _resetTotalPrice(){
-    totalPrice = 0;
+    this.totalPrice = 0;
   }
 
   _addPrice(){
-    totalPrice = totalPrice + this.price;
+    this.totalPrice = this.totalPrice + this.price;
   }
 
   _distractPrice(){
-    totalPrice = totalPrice - this.price;
+    this.totalPrice = this.totalPrice - this.price;
   }
 
   _calChange(changeParam) {
@@ -63,10 +71,6 @@ export class VendingMachine {
       change = change % coin;
     });
 
-    // for(var i = 0; i< changeArr.length; i++){
-    //   result.push(Math.floor(change / changeArr[i]));
-    //   change = change % changeArr[i];
-    // }
     return result;
   }
 
