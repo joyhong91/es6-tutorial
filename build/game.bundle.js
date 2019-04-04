@@ -105,6 +105,7 @@
   var defeat = 0;
   var draw = 0;
   gameInit();
+  console.log('');
 
   function gameInit() {
     $btnStart.css('background', '#fff');
@@ -134,6 +135,8 @@
       $btnResetScore.css('color', '#000');
     }, 100);
   }
+
+  console.log('here');
 
   function startGame(event) {
     if (!event) return false;
@@ -188,6 +191,11 @@
     }
   }
 })(jQuery);
+
+class Game {
+  constructor() {}
+
+}
 
 /***/ })
 

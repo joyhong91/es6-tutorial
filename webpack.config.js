@@ -3,7 +3,7 @@ var webpack = require('webpack');
 
 module.exports = {
   entry: {
-    game: './practice/game/assets/js/app.js'
+    game: './practice/game/assets/js/game.js'
   },
   mode: 'development',
   output: {
