@@ -108,16 +108,14 @@ class Game {
     this.defeat = 0;
   }
 
-  setPlayerItem(value) {
-    this.player = parseInt(value);
+  setPlayerItem(selectedValue) {
+    this.player = parseInt(selectedValue);
     this.setComputerItem();
     return this;
   }
 
   setComputerItem() {
     this.computer = Math.floor(Math.random() * 3);
-    this.checkResult();
-    return this;
   }
 
   checkResult() {
@@ -160,4 +158,6 @@ class Game {
 }
 
 const game = new Game();
-game.setPlayerItem('1');
+game.setPlayerItem('0').checkResult();
+game.setPlayerItem('1').checkResult();
+game.setPlayerItem('2').checkResult();
